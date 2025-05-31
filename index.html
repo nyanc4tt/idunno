@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nanoxyte Networks</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<style>
+  /* Reset */
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0; padding: 0;
+  }
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #000;
+    color: #eee;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+  a {
+    color: #eee;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  a:hover, a:focus {
+    color: #fff;
+    outline: none;
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid #333;
+    background: linear-gradient(90deg, #111, #000);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    animation: fadeInDown 0.8s ease-out;
+  }
+  .logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 2.25rem;
+    letter-spacing: 0.1em;
+    color: #fff;
+    user-select: none;
+    position: relative;
+  }
+  .logo::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s ease;
+  }
+  .logo:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  nav {
+    display: flex;
+    gap: 2rem;
+  }
+  nav a {
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding-bottom: 2px;
+    position: relative;
+  }
+  nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  nav a:hover::after, nav a:focus::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+  }
+
+  section {
+    margin-bottom: 8rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  h1, h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 3rem;
+    line-height: 1.2;
+    background: linear-gradient(90deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    display: inline-block;
+  }
+  h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+  }
+  h2 {
+    font-size: 2.2rem;
+    border-bottom: 1px solid #444;
+    padding-bottom: 0.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+  }
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+  }
+
+  p {
+    font-size: 1.15rem;
+    color: #ccc;
+    max-width: 720px;
+    margin-bottom: 2rem;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: none;
+    border: 2px solid #eee;
+    padding: 0.75rem 2rem;
+    color: #eee;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: #eee;
+    transition: all 0.4s ease;
+    z-index: -1;
+  }
+  .btn-primary:hover, .btn-primary:focus {
+    color: #000;
+    outline: none;
+  }
+  .btn-primary:hover::before, .btn-primary:focus::before {
+    left: 0;
+  }
+
+  .services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+  }
+  .service-card {
+    background: #111;
+    border: 1px solid #222;
+    padding: 2.5rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), transparent);
+    z-index: 0;
+  }
+  .service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    border-color: #444;
+  }
+  .service-card h3 {
+    font-family: 'Montserrat', sans-serif;
+    margin-bottom: 1rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.4rem;
+    position: relative;
+  }
+  .service-card p {
+    color: #bbb;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    position: relative;
+  }
+  .service-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  .infrastructure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .infra-item {
+    background: #111;
+    padding: 2rem;
+    border-radius: 8px;
+    border-left: 4px solid #fff;
+  }
+  .infra-item h3 {
+    font-family: 'Montserrat', sans-serif;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  /* Animated background elements */
+  .bg-elements {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .bg-element {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    animation: float 15s infinite linear;
+  }
+  .bg-element:nth-child(1) {
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    left: 5%;
+    animation-delay: 0s;
+  }
+  .bg-element:nth-child(2) {
+    width: 150px;
+    height: 150px;
+    top: 60%;
+    left: 80%;
+    animation-delay: 3s;
+  }
+  .bg-element:nth-child(3) {
+    width: 200px;
+    height: 200px;
+    top: 80%;
+    left: 20%;
+    animation-delay: 6s;
+  }
+  .bg-element:nth-child(4) {
+    width: 100px;
+    height: 100px;
+    top: 30%;
+    left: 50%;
+    animation-delay: 9s;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-50px) rotate(180deg);
+    }
+    100% {
+      transform: translateY(0) rotate(360deg);
+    }
+  }
+
+  footer {
+    border-top: 1px solid #222;
+    background: rgba(0,0,0,0.7);
+    padding: 3rem 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+    user-select: none;
+    backdrop-filter: blur(5px);
+  }
+  footer p {
+    margin: 0 auto 1rem;
+    max-width: none;
+  }
+  footer a {
+    color: #777;
+    margin: 0 1rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  footer a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #fff;
+    transition: width 0.3s ease;
+  }
+  footer a:hover, footer a:focus {
+    color: #fff;
+    outline: none;
+  }
+  footer a:hover::after, footer a:focus::after {
+    width: 100%;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    header {
+      padding: 1rem 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    nav {
+      gap: 1rem;
+    }
+    h1 {
+      font-size: 2.25rem;
+    }
+    h2 {
+      font-size: 1.8rem;
+    }
+    main {
+      margin: 2rem 1rem;
+    }
+    .services {
+      grid-template-columns: 1fr;
+    }
+    .service-card {
+      padding: 1.75rem 1.5rem;
+    }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #111;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 5px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+</style>
+</head>
+<body>
+<!-- Animated background elements -->
+<div class="bg-elements">
+  <div class="bg-element"></div>
+  <div class="bg-element"></div>
+  <div class="bg-element"></div>
+  <div class="bg-element"></div>
+</div>
+
+<header>
+  <div class="logo animate__animated animate__fadeIn">Nanoxyte Networks</div>
+  <nav>
+    <a href="#about" class="animate__animated animate__fadeIn animate__delay-1s">About</a>
+    <a href="#services" class="animate__animated animate__fadeIn animate__delay-1s">Services</a>
+    <a href="#infrastructure" class="animate__animated animate__fadeIn animate__delay-1s">Infrastructure</a>
+    <a href="#contact" class="animate__animated animate__fadeIn animate__delay-1s">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section id="about" class="animate__animated animate__fadeIn">
+    <h1>Empowering the Future of Connectivity</h1>
+    <p>Nanoxyte Networks is dedicated to providing ultra-reliable, high-performance networking solutions. Built with cutting-edge infrastructure and optimized for seamless connectivity, we deliver services tailored to businesses and individuals who demand excellence.</p>
+    <button class="btn-primary" onclick="location.href='#contact'">Get in Touch</button>
+  </section>
+
+  <section id="services">
+    <h2>Our Services</h2>
+    <div class="services">
+      <article class="service-card">
+        <div class="icon">⚡</div>
+        <h3>Fiber-Optic Internet</h3>
+        <p>Experience blazing fast internet speeds with our fiber-optic backbone, ensuring minimal latency and unmatched reliability for your business or home.</p>
+      </article>
+      <article class="service-card">
+        <div class="icon">🖥️</div>
+        <h3>Dedicated Hosting</h3>
+        <p>Secure and scalable dedicated server solutions for enterprises requiring robust infrastructure and 99.99% uptime guarantees.</p>
+      </article>
+      <article class="service-card">
+        <div class="icon">☁️</div>
+        <h3>Cloud Networking</h3>
+        <p>Seamless cloud integration with secure VPNs and flexible bandwidth allocation tailored for modern distributed workflows.</p>
+      </article>
+      <article class="service-card">
+        <div class="icon">🛡️</div>
+        <h3>24/7 Network Support</h3>
+        <p>Our expert team monitors your network around the clock, ensuring any issues are proactively identified and resolved.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="infrastructure">
+    <h2>Global Infrastructure</h2>
+    <p>Nanoxyte Networks operates on a fully redundant, geographically distributed architecture with Tier 1 peering agreements. Our data centers are equipped with state-of-the-art security and climate controls to guarantee maximum uptime and performance.</p>
+    
+    <div class="infrastructure-grid">
+      <div class="infra-item">
+        <h3>Redundant Network</h3>
+        <p>Multiple backbone connections ensure uninterrupted service even during maintenance or outages.</p>
+      </div>
+      <div class="infra-item">
+        <h3>Global Presence</h3>
+        <p>Data centers strategically located across North America, Europe, and Asia for optimal latency.</p>
+      </div>
+      <div class="infra-item">
+        <h3>Enterprise Security</h3>
+        <p>Biometric access controls, 24/7 surveillance, and advanced DDoS protection.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <p>© 2025 Nanoxyte Networks. All rights reserved.</p>
+  <p>
+    <a href="mailto:contact@nanoxyte.xyz">contact@nanoxyte.xyz</a>
+    <a href="#">Network Status</a>
+    <a href="#">Support Portal</a>
+    <a href="#">Careers</a>
+  </p>
+</footer>
+
+<script>
+  // Intersection Observer for scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+
+  document.querySelectorAll('section').forEach(section => {
+    observer.observe(section);
+  });
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // Button hover effect enhancement
+  const buttons = document.querySelectorAll('.btn-primary');
+  buttons.forEach(button => {
+    button.addEventListener('mouseenter', () => {
+      button.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.5)';
+    });
+    button.addEventListener('mouseleave', () => {
+      button.style.boxShadow = 'none';
+    });
+  });
+</script>
+</body>
+</html>
